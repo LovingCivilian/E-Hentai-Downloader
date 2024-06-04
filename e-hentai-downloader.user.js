@@ -12129,6 +12129,7 @@ function toCommonFullGalleryInfoJson(info) {
     date_uploaded: toNumberOrDefault(info.dateUploaded, 0),
     category: toStringOrDefault(info.category, ""),
     uploader: toStringOrDefault(info.uploader, ""),
+    uploader_comment: toStringOrDefault(info.uploaderComment, ""),
     rating: {
       average: toNumberOrDefault(info.ratingAverage, 0),
       count: toNumberOrDefault(info.ratingCount, 0)
@@ -12283,6 +12284,14 @@ function getUploader(html) {
   var pattern = /^.*?\/\/.+?\/(.*?)(\?.*?)?(#.*?)?$/;
   var match = pattern.exec(node.getAttribute("href") || "");
   return match !== null ? match[1].split("/")[1] || "" : null;
+}
+function getUploaderComment(html) {
+    var node = html.querySelector("#comment_0");
+    if (node == null) {
+        return null
+    }
+    var value = node.innerHTML.replace(/<br>|<br \/>/gi, '\n');
+    return value
 }
 function getRatingCount(html) {
   var node = html.querySelector("#rating_count");
@@ -12573,6 +12582,7 @@ function populateGalleryInfoFromHtml(info, html) {
   info.mainThumbnailUrl = getMainThumbnailUrl(html);
   info.category = getCategory(html);
   info.uploader = getUploader(html);
+  info.uploaderComment = getUploaderComment(html);
   info.ratingCount = getRatingCount(html);
   info.ratingAverage = getRatingAverage(html);
   info.favoriteCount = getFavoriteCount(html);
